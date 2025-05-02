@@ -1,0 +1,5 @@
+---
+aws_region: ap-south-1
+docker_image_tag: "latest"
+batch_size: 1 # this is for the deployment manage
+max_fail_percentage: 0

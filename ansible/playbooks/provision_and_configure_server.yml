@@ -1,0 +1,18 @@
+---
+- name: Provision Ec2 instance & install XX
+  hosts: localhost
+  gather_facts: no
+  roles:
+    - ecr_setup
+
+- name: Configuration of Ec2 instances
+  hosts: launched_ec2_instances
+  gather_facts: yes
+  become: yes
+  roles: 
+    - common
+    - docker
+
+
+
+    

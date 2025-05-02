@@ -1,0 +1,11 @@
+#SPDX-License-Identifier: MIT-0
+---
+# vars file for common
+node_package_name:
+  Amazon: nodejs  
+  Ubuntu: node_package_name
+package_names:
+  - pk_name: "{{node_package_name[ansible_distribution]}}"
+  - pk_name: git
+  - pk_name: docker
+

@@ -1,0 +1,36 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for iam_setup
+- name: Create IAM role for Ec2 to ECR Access
+  amazon.aws.iam_role:
+    name: "{{ Ec2toEcrAccessRole }}"
+    assume_role_policy_document: "{{ lookup('file', 'ec2-trust-policy.json') }}"
+    state: present
+  register: iam_role
+
+- name: Debug IAM role
+  debug: 
+    var: iam_role
+
+- name: Attach ECR policy to role
+  amazon.aws.iam_policy:
+    iam_type: role
+    iam_name: "{{ Ec2toEcrAccessRole }}"
+    policy_name: ECRAccess
+    policy_json: "{{ lookup('file', 'ecr-access-policy.json') }}"
+    state: present
+
+- name: Create IAM instance profile
+  amazon.aws.iam_instance_profile:
+    name: Ec2EcrInstanceProfile
+    role: "{{ Ec2toEcrAccessRole }}"
+    state: present
+  register: instance_profile
+
+- name: Debug Instance profile
+  debug: 
+    var: instance_profile
+
+- name: Set fact for instance profile name
+  set_fact:
+    ec2_instance_profile_name: "{{ instance_profile.instance_profile_name | default('Ec2EcrInstanceProfile') }}"
