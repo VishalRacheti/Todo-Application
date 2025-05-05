@@ -37,16 +37,15 @@ jobs:
           echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/ec2_key.pem
           chmod 600 ~/.ssh/ec2_key.pem
 
-      - name: Debug SSH keys
+      - name: Debug SSH key
         run: ls -l ~/.ssh/ec2_key.pem
 
       - name: Provision EC2 instance & open required ports
         run: |
-        ansible-playbook ansible/playbooks/provosion_and_configure_server.yml
-        -e "ec2_key_path= ~/.ssh/ec2_key.pem"
-
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      EC2_SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-         
+          ansible-playbook ansible/playbooks/provosion_and_configure_server.yml \
+            -e "ec2_key_path=~/.ssh/ec2_key.pem"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          EC2_SSH_KEY_PATH: ~/.ssh/ec2_key.pem
+          ANSIBLE_HOST_KEY_CHECKING: "False"
