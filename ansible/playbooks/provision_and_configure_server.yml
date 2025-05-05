@@ -1,18 +1,31 @@
 ---
-- name: Provision Ec2 instance & install XX
+- name: Provision EC2 instance & open required ports
   hosts: localhost
-  gather_facts: no
-  roles:
-    - ecr_setup
-
-- name: Configuration of Ec2 instances
-  hosts: launched_ec2_instances
-  gather_facts: yes
-  become: yes
-  roles: 
-    - common
-    - docker
-
-
-
-    
+  gather_facts: false
+  tasks:
+    - name: Adding SSH, frontend, backend, and app access to a security group
+      amazon.aws.ec2_group:
+        name: default
+        description: Security group for EC2 instance
+        region: ap-south-1
+        rules:
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+          - proto: tcp
+            from_port: 3000
+            to_port: 3000
+            cidr_ip: 0.0.0.0/0
+          - proto: tcp
+            from_port: 3002
+            to_port: 3002
+            cidr_ip: 0.0.0.0/0
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
+        rules_egress:
+          - proto: -1
+            cidr_ip: 0.0.0.0/0
+      register: security_group
