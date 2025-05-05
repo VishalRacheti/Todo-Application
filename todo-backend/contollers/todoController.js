@@ -17,7 +17,7 @@ exports.getTodos = async(req,res)=>{
 exports.addTodo =  async (req,res)=>{
     try {
         const title  = req.body.title;
-        // console.log("Adding a new todo", req.body)
+         console.log("Adding a new todo", req.body)
         logger.info(`Adding a new todo ${title}`)
         const newTodo = new Todo({
             title: title
