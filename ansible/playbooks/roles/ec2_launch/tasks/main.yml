@@ -3,7 +3,7 @@
 # tasks file for ec2_launch
 - name: Configure Security Group
   amazon.aws.ec2_group:
-    name: default
+    name: vishal-security
     description: "Allow SSH and application access"
     region: "{{ aws_regions }}"
     rules:
