@@ -25,9 +25,10 @@
     name: Ansible-create-ec2
     key_name: "{{ ec2_key_name }}"
     instance_type: "{{ ec2_instance_type }}"
-    image_id: ami-0f1dcc636b69a6438
+    image: ami-0f1dcc636b69a6438
     wait: yes
     region: "{{ aws_regions }}"
     count: 1
-    group_id: "{{ security_group_id }}"
+    security_groups: 
+      - "{{ security_group }}"
   register: ec2_instance
