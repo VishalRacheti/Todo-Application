@@ -3,7 +3,7 @@
 # vars file for ec2_launch
 aws_regions: ap-south-1
 ec2_instance_type: t2.micro
-ec2_ami_id: ami-0f1dcc636b69a6438
+image_id: ami-0f1dcc636b69a6438
 ec2_key_name: Vishal-temp
 security_group: vishal-security
 security_group_id: sg-00c5efb172d58f864
