@@ -22,12 +22,9 @@
   debug:
     var: security_group.group_id
 
-
-
-
 - name: Provision EC2 instance
   amazon.aws.ec2_instance:
-    name: Ansible-create-ec2
+    name: Ansible-create-ec2  #name of ec2 instance
     key_name: "{{ ec2_key_name }}"
     instance_type: "{{ ec2_instance_type }}"
     image_id: ami-0f1dcc636b69a6438
@@ -36,3 +33,34 @@
     count: 1
     security_group: "{{ security_group.group_id }}"
   register: ec2_instance
+
+- name: Waiting for instance to be ready
+  wait_for: 
+    host: "{{ item.public_dns_name }}"
+    port: 22
+    delay: 30 
+    timeout: 300
+    state: started
+  loop: "{{ all_instances }}"
+
+- name: Add the Ec2 instance to the inventory dynamically
+  add_host: 
+    name: "{{ item.public_dns_name }}"
+    groups: launched_ec2_instances
+    ansible_ssh_private_key_file: "{{ ec2_ssh_key_path }}"
+    ansible_user: "{{ ec2_ssh_user }}"
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+  loop: "{{ all_instances }}"
+
+
+- name: Debug SSH Key Path
+  debug: 
+    var: ec2_ssh_key_path
+
+- name: Debug dynamic inventory
+  debug: 
+    msg: "All Instances: {{ groups['launched_ec2_instances'] }}"
+
+
+
+

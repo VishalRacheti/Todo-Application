@@ -2,14 +2,23 @@
 ---
 # tasks file for common
 - name: Install common Packages
-  become: yes
+  become: true
   package:
-    name: "{{ item.pk_name }}"
-    state: present
-  with_items: "{{ package_names }}"
+    name:
+      - httpd
+      - nodejs
+      - npm
+
+
+- name : Start and enable apache service
+  become: true
+  service:
+    name: httpd
+    state: started
+    enabled: true
 
 - name: Copy Source Code
-  become: yes
+  become: true
   synchronize: 
     src: "{{ playbook_dir }}/../../"
     dest: "/opt/todo-app"
