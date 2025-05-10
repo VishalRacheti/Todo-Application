@@ -3,7 +3,7 @@
 # tasks file for ec2_launch
 - name: Adding SSH, frontend, backend, and app access to a security group
   amazon.aws.ec2_group:
-        name: default
+        name: Vishal-temp
         description: Security group for EC2 instance
         region: ap-south-1
         rules:
