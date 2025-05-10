@@ -27,6 +27,12 @@
     instance_type: "{{ ec2_instance_type }}"
     image: "{{ ec2_ami_id }}"
 
+    
+- name: Debug EC2 AMI ID
+  debug:
+    var: ec2_ami_id
+
+
     wait: yes
     region: "{{ aws_regions }}"
     count: 1
