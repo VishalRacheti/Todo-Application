@@ -1,32 +1,17 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # tasks file for ec2_launch
-- name: Adding SSH, frontend, backend, and app access to a security group
+- name: Configure Security Group
   amazon.aws.ec2_group:
-        name: default
-        description: Security group for EC2 instance
-        region: ap-south-1
-        rules:
-          - proto: tcp
-            from_port: 22
-            to_port: 22
-            cidr_ip: 0.0.0.0/0
-          - proto: tcp
-            from_port: 3000
-            to_port: 3000
-            cidr_ip: 0.0.0.0/0
-          - proto: tcp
-            from_port: 3002
-            to_port: 3002
-            cidr_ip: 0.0.0.0/0
-          - proto: tcp
-            from_port: 80
-            to_port: 80
-            cidr_ip: 0.0.0.0/0
-        rules_egress:
-          - proto: -1
-            cidr_ip: 0.0.0.0/0
-            register: security_group
+    name: default
+    description: "Allow SSH and application access"
+    region: "{{ aws_regions }}"
+    rules:
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: "0.0.0.0/0"
+
 
 
 - name: Provision EC2 instance

@@ -5,4 +5,5 @@ aws_regions: ap-south-1
 ec2_instance_type: t2.micro
 ec2_ami_id: ami-062f0cc54dbfd8ef1
 ec2_key_name: Vishal-temp
+security_group: vishal-security
 
