@@ -23,5 +23,5 @@
     wait: yes
     region: "{{ aws_regions }}"
     count: 1
-    group_id: "{{ security_group.group_id }}"
+    group_id: "{{ security_group_id }}"
   register: ec2_instance
