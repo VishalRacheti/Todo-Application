@@ -41,7 +41,7 @@
     delay: 30 
     timeout: 300
     state: started
-  loop: "{{ all_instances }}"
+  #loop: "{{ all_instances }}"
 
 - name: Add the Ec2 instance to the inventory dynamically
   add_host: 
