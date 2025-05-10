@@ -26,14 +26,6 @@
     key_name: "{{ ec2_key_name }}"
     instance_type: "{{ ec2_instance_type }}"
     image_id: ami-0f1dcc636b69a6438
-
-
-
-- name: Debug EC2 AMI ID
-  debug:
-    var: ec2_ami_id
-
-
     wait: yes
     region: "{{ aws_regions }}"
     count: 1
