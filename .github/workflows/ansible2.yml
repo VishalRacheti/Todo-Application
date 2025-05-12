@@ -42,8 +42,10 @@ jobs:
 
       - name: Provision EC2 instance & open required ports
         run: |
-          ansible-playbook ansible/playbooks/provision_and_configure_server.yml \
-            -e "ec2_key_path=~/.ssh/ec2_key.pem"
+          ansible-playbook \
+           -i ansible/inventory \
+           -e "ec2_ssh_key_path=~/.ssh/ec2_key.pem" \
+           ansible/playbooks/provision_and_configure_server.yml
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
