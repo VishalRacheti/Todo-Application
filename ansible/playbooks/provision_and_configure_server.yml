@@ -5,7 +5,6 @@
   roles:
     - ec2_launch
 
-    
 - name: Configuration of Ec2 Instances
   hosts: launched_ec2_instances
   gather_facts: true

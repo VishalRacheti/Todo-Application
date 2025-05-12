@@ -58,4 +58,5 @@
 
 - name: Debug dynamic inventory
   debug:
-    msg: "All Instances: {{ groups['dynamic_hosts'] }}"
+    msg: "All Instances: {{ groups['launched_ec2_instances'] | default([]) }}"
+
