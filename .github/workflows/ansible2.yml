@@ -1,4 +1,4 @@
-name: Provision of EC2 instance and configuration with Ansible
+name: Provision of EC2 instance and configuration with Ansibles
 
 on:
   push:
@@ -50,4 +50,3 @@ jobs:
           EC2_SSH_KEY_PATH: ~/.ssh/ec2_key.pem
           ANSIBLE_HOST_KEY_CHECKING: "False"
 
-  ###to retest the playbook
