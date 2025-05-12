@@ -1,6 +1,7 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 # tasks file for ec2_launch
+
 - name: Configure Security Group
   amazon.aws.ec2_group:
     name: vishal-security
@@ -11,7 +12,6 @@
         from_port: 22
         to_port: 22
         cidr_ip: "0.0.0.0/0"
-      
       - proto: tcp
         from_port: 3000
         to_port: 3000
@@ -24,7 +24,7 @@
 
 - name: Provision EC2 instance
   amazon.aws.ec2_instance:
-    name: Ansible-create-ec2  #name of ec2 instance
+    name: Ansible-create-ec2
     key_name: "{{ ec2_key_name }}"
     instance_type: "{{ ec2_instance_type }}"
     image_id: ami-0f1dcc636b69a6438
@@ -34,32 +34,28 @@
     security_group: "{{ security_group.group_id }}"
   register: ec2_instance
 
-- name: Waiting for instance to be ready
-  wait_for: 
-    host: "{{ item.public_dns_name }}"
+- name: Wait for the instance to be launched
+  wait_for:
+    host: "{{ ec2_instance.instances[0].public_dns_name }}"
     port: 22
-    delay: 30 
+    delay: 30
     timeout: 300
     state: started
-  #loop: "{{ all_instances }}"
+  when: ec2_instance.instances is defined and ec2_instance.instances | length > 0
 
-- name: Add the Ec2 instance to the inventory dynamically
-  add_host: 
-    name: "{{ item.public_dns_name }}"
-    groups: launched_ec2_instances
-    ansible_ssh_private_key_file: "{{ ec2_ssh_key_path }}"
-    ansible_user: "{{ ec2_ssh_user }}"
-    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-
+- name: Add EC2 instance to dynamic inventory group
+  add_host:
+    name: "{{ ec2_instance.instances[0].public_dns_name }}"
+    groups: dynamic_hosts
+    ansible_ssh_private_key_file: "~/.ssh/fast-api.pem"
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+    ansible_user: ec2-user
+  when: ec2_instance.instances is defined and ec2_instance.instances | length > 0
 
 - name: Debug SSH Key Path
-  debug: 
+  debug:
     var: ec2_ssh_key_path
 
 - name: Debug dynamic inventory
-  debug: 
-    msg: "All Instances: {{ groups['launched_ec2_instances'] }}"
-
-
-
-
+  debug:
+    msg: "All Instances: {{ groups['dynamic_hosts'] }}"
