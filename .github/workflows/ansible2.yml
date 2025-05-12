@@ -31,11 +31,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      - name: Create SSH Key file
+      - name: Write EC2 SSH private key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/ec2_key.pem
-          chmod 600 ~/.ssh/ec2_key.pem
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/fast-api.pem
+          chmod 600 ~/.ssh/fast-api.pem
 
       - name: Debug SSH key
         run: ls -l ~/.ssh/ec2_key.pem
