@@ -49,3 +49,5 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           EC2_SSH_KEY_PATH: ~/.ssh/ec2_key.pem
           ANSIBLE_HOST_KEY_CHECKING: "False"
+
+  ###to retest the playbook
