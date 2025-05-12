@@ -34,11 +34,11 @@ jobs:
       - name: Write EC2 SSH private key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/fast-api.pem
-          chmod 600 ~/.ssh/fast-api.pem
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/Vishal-temp.pem
+          chmod 600 ~/.ssh/Vishal-temp.pem
 
-      - name: Debug SSH key
-        run: ls -l ~/.ssh/ec2_key.pem
+      - name: Confirm key exists
+        run: ls -l ~/.ssh/
 
       - name: Provision EC2 instance & open required ports
         run: |
