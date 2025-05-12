@@ -1,4 +1,4 @@
-name: Provision of EC2 instance and configuration with Ansibles
+name: Provision of EC2 instance and configuration with Ansible
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
 jobs: 
   provision_ec2:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -43,12 +44,13 @@ jobs:
       - name: Provision EC2 instance & open required ports
         run: |
           ansible-playbook \
-           -i ansible/inventory \
-           -e "ec2_ssh_key_path=~/.ssh/ec2_key.pem" \
-           ansible/playbooks/provision_and_configure_server.yml
+            -i ansible/inventory \
+            -e "ec2_ssh_key_path=~/.ssh/Vishal-temp.pem" \
+            -e "ec2_key_name=Vishal-temp" \
+            -e "aws_regions=ap-south-1" \
+            -e "ec2_instance_type=t2.micro" \
+            ansible/playbooks/provision_and_configure_server.yml
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          EC2_SSH_KEY_PATH: ~/.ssh/ec2_key.pem
           ANSIBLE_HOST_KEY_CHECKING: "False"
-
