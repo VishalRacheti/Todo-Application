@@ -46,11 +46,11 @@
 - name: Add EC2 instance to dynamic inventory group
   add_host:
     name: "{{ ec2_instance.instances[0].public_dns_name }}"
-    groups: dynamic_hosts
+    groups: launched_ec2_instances
     ansible_ssh_private_key_file: "~/.ssh/fast-api.pem"
     ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
     ansible_user: ec2-user
-  when: ec2_instance.instances is defined and ec2_instance.instances | length > 0
+
 
 - name: Debug SSH Key Path
   debug:
