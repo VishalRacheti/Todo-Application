@@ -2,13 +2,13 @@
 ---
 # tasks file for frontend
 - name: Install frontend dependencies
-  become: yes
+  become: true
   npm:
     path: /opt/todo-app/todo-frontend
     state: present
 
 - name: Build frontend
-  become: yes
+  become: true
   command: npm run build
   args:
     chdir: /opt/todo-app/todo-frontend
