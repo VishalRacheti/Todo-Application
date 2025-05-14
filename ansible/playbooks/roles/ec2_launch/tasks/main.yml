@@ -13,8 +13,8 @@
         to_port: 22
         cidr_ip: "0.0.0.0/0"
       - proto: tcp
-        from_port: 3002
-        to_port: 3002
+        from_port: 3000
+        to_port: 3000
         cidr_ip: "0.0.0.0/0"
   register: security_group
 
@@ -37,7 +37,7 @@
 - name: Wait for the instance to be launched
   wait_for:
     host: "{{ ec2_instance.instances[0].public_dns_name }}"
-    port: 3002
+    port: 3000
     delay: 30
     timeout: 300
     state: started
