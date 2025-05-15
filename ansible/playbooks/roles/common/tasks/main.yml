@@ -28,6 +28,5 @@
       - "--exclude=.git"
       - "--exclude=.github"
       - "--exclude=ansible"
-      - "--exclude=todo-frontend"
       - "--exclude=terraform"
       
