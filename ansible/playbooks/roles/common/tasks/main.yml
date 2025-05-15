@@ -21,7 +21,7 @@
   become: true
   synchronize: 
     src: "{{ playbook_dir }}/../../"
-    dest: "/opt/todo-app"
+    dest: "/opt/todo_app"
     delete: yes
     recursive: yes
     rsync_opts:
