@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: MIT-0
 ---
-# tasks file for ec2_launch
 
-- name: Configure Security Group
+# 1. Create Security Group
+- name: Create security group
   amazon.aws.ec2_group:
     name: vishal-security
     description: "Allow SSH and application access"
@@ -18,45 +18,64 @@
         cidr_ip: "0.0.0.0/0"
   register: security_group
 
-- name: Debug Security Group ID
-  debug:
-    var: security_group.group_id
+# 2. Search for existing instances by tag
+- name: Get existing EC2 instances with tag
+  amazon.aws.ec2_instance_info:
+    region: "{{ aws_regions }}"
+    filters:
+      "tag:Name": "Ansible-create-ec2"
+      instance-state-name: "running"
+  register: existing_instances
 
-- name: Provision EC2 instance
+# 3. Set fact if existing instances are found
+- name: Set instance list from existing EC2s
+  set_fact:
+    ec2_instance_list: "{{ existing_instances.instances }}"
+  when: existing_instances.instances | length > 0
+
+# 4. Launch instances only if none found
+- name: Launch EC2 instance if none found
   amazon.aws.ec2_instance:
     name: Ansible-create-ec2
-    key_name: "{{ ec2_key_name }}"
+    key_name: "Vishal-temp"
     instance_type: "{{ ec2_instance_type }}"
-    image_id: ami-062f0cc54dbfd8ef1
+    image_id: "ami-062f0cc54dbfd8ef1"
     wait: yes
     region: "{{ aws_regions }}"
-    count: 1
+    count: 2
+    tags:
+      Name: Ansible-create-ec2
     security_group: "{{ security_group.group_id }}"
-  register: ec2_instance
+  register: launched_instances
+  when: existing_instances.instances | length == 0
 
-- name: Wait for the instance to be launched
+# 5. Set fact for launched instance list
+- name: Set instance list from launched EC2s
+  set_fact:
+    ec2_instance_list: "{{ launched_instances.instances }}"
+  when: existing_instances.instances | length == 0
+
+# 6. Wait for all instances to become available
+- name: Wait for SSH on all EC2 instances
   wait_for:
-    host: "{{ ec2_instance.instances[0].public_dns_name }}"
+    host: "{{ item.public_dns_name }}"
     port: 22
     delay: 30
     timeout: 300
     state: started
-  when: ec2_instance.instances is defined and ec2_instance.instances | length > 0
+  loop: "{{ ec2_instance_list }}"
 
-- name: Add EC2 instance to dynamic inventory group
+# 7. Add all EC2 instances to dynamic inventory
+- name: Add EC2 instances to dynamic inventory
   add_host:
-    name: "{{ ec2_instance.instances[0].public_dns_name }}"
+    name: "{{ item.public_dns_name }}"
     groups: launched_ec2_instances
     ansible_ssh_private_key_file: "~/.ssh/Vishal-temp.pem"
     ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
     ansible_user: ec2-user
+  loop: "{{ ec2_instance_list }}"
 
-
-- name: Debug SSH Key Path
+# 8. Final debug: List all reachable hosts
+- name: Show EC2 instances in dynamic group
   debug:
-    var: ec2_ssh_key_path
-
-- name: Debug dynamic inventory
-  debug:
-    msg: "All Instances: {{ groups['launched_ec2_instances'] | default([]) }}"
-
+    msg: "Instances added to inventory: {{ groups['launched_ec2_instances'] | default([]) }}"
