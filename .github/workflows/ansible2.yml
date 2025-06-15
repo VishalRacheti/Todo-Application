@@ -1,4 +1,4 @@
-name: Provision of EC2 instance and configuration with Ansible
+name: Provision of EC2 instance and configuration with Ansible final
 
 on:
   push:
